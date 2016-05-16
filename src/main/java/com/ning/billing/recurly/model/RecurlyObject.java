@@ -136,6 +136,42 @@ public abstract class RecurlyObject {
         return Integer.valueOf(object.toString());
     }
 
+    public static Double doubleOrNull(@Nullable final Object object) {
+        if (isNull(object)) {
+            return null;
+        }
+
+        // Doubles are represented as objects (e.g. <tax_rate type="float">0.12</tax_rate>), which Jackson
+        // will interpret as an Object (Map), not Double.
+        if (object instanceof Map) {
+            final Map map = (Map) object;
+            if (map.keySet().size() == 2 && "float".equals(map.get("type"))) {
+                return Double.valueOf((String) map.get(""));
+            }
+        }
+
+        return Double.valueOf(object.toString());
+    }
+
+    public static String hrefOrNull(@Nullable final Object object) {
+        if (isNull(object)) {
+            return null;
+        }
+
+        // Href are represented as objects (e.g. <account href="https://your-subdomain.recurly.com/v2/accounts/1"/>), which Jackson
+        // will interpret as an Object (Map).
+        if (object instanceof Map) {
+            final Map map = (Map) object;
+            if (map.keySet().size() >= 1 && map.containsKey("href")) {
+                return (String) map.get("href");
+            }
+        }
+
+        return object.toString();
+    }
+
+
+
     public static DateTime dateTimeOrNull(@Nullable final Object object) {
         if (isNull(object)) {
             return null;

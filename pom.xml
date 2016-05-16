@@ -23,9 +23,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ning.billing</groupId>
-    <artifactId>recurly-java-library</artifactId>
+    <artifactId>recurly-lib</artifactId>
     <packaging>jar</packaging>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.1.1</version>
     <name>Recurly Java library</name>
     <description>Java library for Recurly</description>
     <url>http://github.com/killbilling/recurly-java-library</url>

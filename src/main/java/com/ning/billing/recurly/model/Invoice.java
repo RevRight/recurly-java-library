@@ -17,12 +17,12 @@
 
 package com.ning.billing.recurly.model;
 
+import com.google.common.base.Objects;
+import org.joda.time.DateTime;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.joda.time.DateTime;
-import com.google.common.base.Objects;
 
 @XmlRootElement(name = "invoice")
 public class Invoice extends RecurlyObject {
@@ -30,11 +30,17 @@ public class Invoice extends RecurlyObject {
     @XmlElement(name = "account")
     private Account account;
 
-    @XmlElement(name = "original_invoice")
-    private Invoice originalInvoice;
+//    @XmlElement(name = "original_invoice")
+//    private Invoice originalInvoice;
 
     @XmlElement(name = "uuid")
     private String uuid;
+
+    @XmlElement(name = "address")
+    private Address address;
+
+    @XmlElement(name = "subscription")
+    private String subscriptionHref;
 
     @XmlElement(name = "state")
     private String state;
@@ -42,8 +48,14 @@ public class Invoice extends RecurlyObject {
     @XmlElement(name = "invoice_number")
     private Integer invoiceNumber;
 
+    @XmlElement(name = "invoice_number_prefix")
+    private String invoiceNumberPrefix;
+
+    @XmlElement(name = "original_invoice")
+    private String originalInvoiceHref;
+
     @XmlElement(name = "po_number")
-    private Integer poNumber;
+    private String poNumber;
 
     @XmlElement(name = "vat_number")
     private String vatNumber;
@@ -66,6 +78,18 @@ public class Invoice extends RecurlyObject {
     @XmlElement(name = "collection_method")
     private String collectionMethod;
 
+    @XmlElement(name = "closed_at")
+    private DateTime closedAt;
+
+    @XmlElement(name = "tax_type")
+    private String taxType;
+
+    @XmlElement(name = "tax_region")
+    private String taxRegion;
+
+    @XmlElement(name = "tax_rate")
+    private Double taxRate;
+
     @XmlElement(name = "net_terms")
     private Integer netTerms;
 
@@ -84,30 +108,14 @@ public class Invoice extends RecurlyObject {
         return account;
     }
 
-  /**
-   * Set this original invoice to the passed in original invoice.
-   *
-   * @param originalInvoice original invoice
-   */
-  public void setOriginalInvoice(Invoice originalInvoice) {
-        this.originalInvoice = originalInvoice;
-  }
-
-  /**
-   * Fetches the original invoice if the href is populated, otherwise return the current original invoice.
-   *
-   * @return fully loaded original invoice
-   */
-  public Invoice getOriginalInvoice() {
-        if (originalInvoice != null && originalInvoice.getHref() != null && !originalInvoice.getHref().isEmpty()) {
-            originalInvoice = fetch(originalInvoice, Invoice.class);
-        }
-        return originalInvoice;
-  }
 
     public void setAccount(final Account account) {
         this.account = account;
     }
+
+    public Address getAddress() { return address; }
+
+    public void setAddress(final Address address) { this.address = address; }
 
     public String getUuid() {
         return uuid;
@@ -115,6 +123,14 @@ public class Invoice extends RecurlyObject {
 
     public void setUuid(final Object uuid) {
         this.uuid = stringOrNull(uuid);
+    }
+
+    public String getSubscriptionHref() {
+        return subscriptionHref;
+    }
+
+    public void setSubscriptionHref(final Object subscriptionHref) {
+        this.subscriptionHref = hrefOrNull(subscriptionHref);
     }
 
     public String getState() {
@@ -133,12 +149,28 @@ public class Invoice extends RecurlyObject {
         this.invoiceNumber = integerOrNull(invoiceNumber);
     }
 
-    public Integer getPoNumber() {
+    public String getInvoiceNumberPrefix() {
+        return invoiceNumberPrefix;
+    }
+
+    public void setInvoiceNumberPrefix(final Object invoiceNumberPrefix) {
+        this.invoiceNumberPrefix = stringOrNull(invoiceNumberPrefix);
+    }
+
+    public String getOriginalInvoiceHref() {
+        return originalInvoiceHref;
+    }
+
+    public void setOriginalInvoiceHref(final Object originalInvoiceHref) {
+        this.originalInvoiceHref = hrefOrNull(originalInvoiceHref);
+    }
+
+    public String getPoNumber() {
         return poNumber;
     }
 
     public void setPoNumber(final Object poNumber) {
-        this.poNumber = integerOrNull(poNumber);
+        this.poNumber = stringOrNull(poNumber);
     }
 
     public String getVatNumber() {
@@ -189,6 +221,38 @@ public class Invoice extends RecurlyObject {
         this.createdAt = dateTimeOrNull(createdAt);
     }
 
+    public DateTime getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(final Object closedAt) {
+        this.closedAt = dateTimeOrNull(closedAt);
+    }
+
+    public String getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(final Object taxType) {
+        this.taxType = stringOrNull(taxType);
+    }
+
+    public String getTaxRegion() {
+        return taxRegion;
+    }
+
+    public void setTaxRegion(final Object taxRegion) {
+        this.taxRegion = stringOrNull(taxRegion);
+    }
+
+    public Double getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(final Object taxRate) {
+        this.taxRate = doubleOrNull(taxRate);
+    }
+
     public String getCollectionMethod() {
         return collectionMethod;
     }
@@ -225,10 +289,13 @@ public class Invoice extends RecurlyObject {
     public String toString() {
         final StringBuilder sb = new StringBuilder("Invoice{");
         sb.append("account=").append(account);
-        sb.append(", originalInvoice='").append(originalInvoice).append('\'');
         sb.append(", uuid='").append(uuid).append('\'');
+        sb.append(", address='").append(address);
+        sb.append(", subscriptionHref='").append(subscriptionHref).append('\'');
         sb.append(", state='").append(state).append('\'');
         sb.append(", invoiceNumber=").append(invoiceNumber);
+        sb.append(", invoiceNumberPrefix='").append(invoiceNumberPrefix).append('\'');
+        sb.append(", originalInvoiceHref='").append(originalInvoiceHref).append('\'');
         sb.append(", poNumber=").append(poNumber);
         sb.append(", vatNumber='").append(vatNumber).append('\'');
         sb.append(", subtotalInCents=").append(subtotalInCents);
@@ -236,6 +303,10 @@ public class Invoice extends RecurlyObject {
         sb.append(", totalInCents=").append(totalInCents);
         sb.append(", currency='").append(currency).append('\'');
         sb.append(", createdAt=").append(createdAt);
+        sb.append(", closedAt=").append(closedAt);
+        sb.append(", taxType='").append(taxType).append('\'');
+        sb.append(", taxRegion='").append(taxRegion).append('\'');
+        sb.append(", taxRate=").append(taxRate);
         sb.append(", collectionMethod='").append(collectionMethod).append('\'');
         sb.append(", netTerms=").append(netTerms);
         sb.append(", lineItems=").append(lineItems);
@@ -254,7 +325,7 @@ public class Invoice extends RecurlyObject {
         if (account != null ? !account.equals(invoice.account) : invoice.account != null) {
             return false;
         }
-        if (originalInvoice != null ? !originalInvoice.equals(invoice.originalInvoice) : invoice.originalInvoice != null) {
+        if (subscriptionHref != null ? !subscriptionHref.equals(invoice.subscriptionHref) : invoice.subscriptionHref != null) {
             return false;
         }
         if (collectionMethod != null ? !collectionMethod.equals(invoice.collectionMethod) : invoice.collectionMethod != null) {
@@ -267,6 +338,12 @@ public class Invoice extends RecurlyObject {
             return false;
         }
         if (invoiceNumber != null ? !invoiceNumber.equals(invoice.invoiceNumber) : invoice.invoiceNumber != null) {
+            return false;
+        }
+        if (invoiceNumberPrefix != null ? !invoiceNumberPrefix.equals(invoice.invoiceNumberPrefix) : invoice.invoiceNumberPrefix != null) {
+            return false;
+        }
+        if (originalInvoiceHref != null ? !originalInvoiceHref.equals(invoice.originalInvoiceHref) : invoice.originalInvoiceHref != null) {
             return false;
         }
         if (lineItems != null ? !lineItems.equals(invoice.lineItems) : invoice.lineItems != null) {
@@ -290,6 +367,9 @@ public class Invoice extends RecurlyObject {
         if (totalInCents != null ? !totalInCents.equals(invoice.totalInCents) : invoice.totalInCents != null) {
             return false;
         }
+        if (closedAt != null ? !closedAt.equals(invoice.closedAt) : invoice.closedAt != null) {
+            return false;
+        }
         if (transactions != null ? !transactions.equals(invoice.transactions) : invoice.transactions != null) {
             return false;
         }
@@ -297,6 +377,15 @@ public class Invoice extends RecurlyObject {
             return false;
         }
         if (vatNumber != null ? !vatNumber.equals(invoice.vatNumber) : invoice.vatNumber != null) {
+            return false;
+        }
+        if (taxType != null ? !taxType.equals(invoice.taxType) : invoice.taxType != null) {
+            return false;
+        }
+        if (taxRegion != null ? !taxRegion.equals(invoice.taxRegion) : invoice.taxRegion != null) {
+            return false;
+        }
+        if (taxRate != null ? !taxRate.equals(invoice.taxRate) : invoice.taxRate != null) {
             return false;
         }
 
@@ -307,10 +396,13 @@ public class Invoice extends RecurlyObject {
     public int hashCode() {
         return Objects.hashCode(
                 account,
-                originalInvoice,
                 uuid,
+                address,
+                subscriptionHref,
                 state,
                 invoiceNumber,
+                invoiceNumberPrefix,
+                originalInvoiceHref,
                 poNumber,
                 vatNumber,
                 subtotalInCents,
@@ -318,6 +410,10 @@ public class Invoice extends RecurlyObject {
                 taxInCents,
                 currency,
                 createdAt,
+                closedAt,
+                taxType,
+                taxRegion,
+                taxRate,   
                 collectionMethod,
                 netTerms,
                 lineItems,

@@ -557,6 +557,18 @@ public class RecurlyClient {
     }
 
     /**
+     * Lookup all invoices
+     * <p>
+     * Returns all invoices in descending order
+     *
+     * @return the invoices associated with this account on success, null otherwise
+     */
+    public Invoices getInvoices() {
+        return doGET(Invoices.INVOICES_RESOURCE,
+                     Invoices.class);
+    }
+
+    /**
      * Lookup an account's invoices
      * <p>
      * Returns the account's invoices
@@ -904,9 +916,9 @@ public class RecurlyClient {
     }
 
     public <T> T doGETWithFullURL(final Class<T> clazz, final String url) {
-        if (debug()) {
+        //if (debug()) {
             log.info("Msg to Recurly API [GET] :: URL : {}", url);
-        }
+        //}
         return callRecurlySafe(client.prepareGet(url), clazz);
     }
 
@@ -996,7 +1008,7 @@ public class RecurlyClient {
 
             // Handle errors payload
             if (response.getStatusCode() >= 300) {
-                log.warn("Recurly error whilst calling: {}\n{}", response.getUri(), payload);
+                log.error("Recurly error whilst calling: {}\n{}\n{}", response.getUri(), response.getStatusCode(), payload);
 
                 if (response.getStatusCode() == 422) {
                     final Errors errors;
