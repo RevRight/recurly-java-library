@@ -17,21 +17,19 @@
 
 package com.ning.billing.recurly.model.push;
 
+import com.google.common.base.CaseFormat;
+import com.ning.billing.recurly.model.RecurlyObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.ning.billing.recurly.model.RecurlyObject;
-
-import com.google.common.base.CaseFormat;
-
 public abstract class Notification extends RecurlyObject {
 
     private static Logger log = LoggerFactory.getLogger(Notification.class);
-    private static Pattern ROOT_NAME = Pattern.compile("<(.*_notification)>");
+    private static Pattern ROOT_NAME = Pattern.compile("<(\\w+?_notification)>");
 
     public static enum Type {
         BillingInfoUpdatedNotification(com.ning.billing.recurly.model.push.account.BillingInfoUpdatedNotification.class),
@@ -72,7 +70,7 @@ public abstract class Notification extends RecurlyObject {
             // TODO Should we cache the mapper?
             return RecurlyObject.newXmlMapper().readValue(payload, clazz);
         } catch (IOException e) {
-            log.warn("Enable to read notification, de-serialization failed : {}", e.getMessage());
+            log.warn("Unable to read notification, de-serialization failed : {}", e.getMessage());
             return null;
         }
     }
@@ -88,14 +86,15 @@ public abstract class Notification extends RecurlyObject {
         final Matcher m = ROOT_NAME.matcher(payload);
         if (m.find() && m.groupCount() >= 1) {
             final String root = m.group(1);
+            log.info("messageType: " + root);
             try {
                 return Type.valueOf(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, root));
             } catch (IllegalArgumentException e) {
-                log.warn("Enable to detect notification type, no type for {}", root);
+                log.warn("Unable to detect notification type, no type for {}", root);
                 return null;
             }
         }
-        log.warn("Enable to detect notification type");
+        log.warn("Unable to detect notification type");
         return null;
     }
 }
