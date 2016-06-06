@@ -17,9 +17,11 @@
 
 package com.ning.billing.recurly.model;
 
+import com.google.common.base.Objects;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import com.google.common.base.Objects;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "error")
 public class RecurlyAPIError extends RecurlyObject {
@@ -32,6 +34,9 @@ public class RecurlyAPIError extends RecurlyObject {
 
     @XmlElement(name = "details")
     private String details;
+
+    @XmlTransient
+    private int statusCode;
 
     public String getDescription() {
         return description;
@@ -57,12 +62,21 @@ public class RecurlyAPIError extends RecurlyObject {
         this.details = details;
     }
 
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("RecurlyAPIError{");
         sb.append("description='").append(description).append('\'');
         sb.append(", symbol='").append(symbol).append('\'');
         sb.append(", details='").append(details).append('\'');
+        sb.append(", statusCode=").append(statusCode);
         sb.append('}');
         return sb.toString();
     }
