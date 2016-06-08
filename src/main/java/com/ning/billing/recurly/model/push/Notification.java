@@ -86,7 +86,7 @@ public abstract class Notification extends RecurlyObject {
         final Matcher m = ROOT_NAME.matcher(payload);
         if (m.find() && m.groupCount() >= 1) {
             final String root = m.group(1);
-            log.info("messageType: " + root);
+            //log.info("messageType: " + root);
             try {
                 return Type.valueOf(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, root));
             } catch (IllegalArgumentException e) {
