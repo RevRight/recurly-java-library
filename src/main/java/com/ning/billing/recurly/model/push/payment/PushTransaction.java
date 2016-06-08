@@ -17,13 +17,10 @@
 
 package com.ning.billing.recurly.model.push.payment;
 
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlElement;
-
+import com.ning.billing.recurly.model.AbstractTransaction;
 import org.joda.time.DateTime;
 
-import com.ning.billing.recurly.model.AbstractTransaction;
+import javax.xml.bind.annotation.XmlElement;
 
 public class PushTransaction extends AbstractTransaction {
 
@@ -35,6 +32,9 @@ public class PushTransaction extends AbstractTransaction {
 
     @XmlElement(name = "invoice_number")
     private Integer invoiceNumber;
+
+    @XmlElement(name = "invoice_number_prefix")
+    private String invoiceNumberPrefix;
 
     @XmlElement(name = "subscription_id")
     private String subscriptionId;
@@ -67,6 +67,14 @@ public class PushTransaction extends AbstractTransaction {
 
     public void setInvoiceNumber(final Object invoiceNumber) {
         this.invoiceNumber = integerOrNull(invoiceNumber);
+    }
+
+    public String getInvoiceNumberPrefix() {
+        return invoiceNumberPrefix;
+    }
+
+    public void setInvoiceNumberPrefix(final Object invoiceNumberPrefix) {
+        this.invoiceNumberPrefix = stringOrNull(invoiceNumberPrefix);
     }
 
     public String getSubscriptionId() {
@@ -121,6 +129,9 @@ public class PushTransaction extends AbstractTransaction {
         if (invoiceNumber != null ? !invoiceNumber.equals(that.invoiceNumber) : that.invoiceNumber != null) {
             return false;
         }
+        if (invoiceNumberPrefix != null ? !invoiceNumberPrefix.equals(that.invoiceNumberPrefix) : that.invoiceNumberPrefix != null) {
+            return false;
+        }
         if (message != null ? !message.equals(that.message) : that.message != null) {
             return false;
         }
@@ -137,6 +148,7 @@ public class PushTransaction extends AbstractTransaction {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (invoiceId != null ? invoiceId.hashCode() : 0);
         result = 31 * result + (invoiceNumber != null ? invoiceNumber.hashCode() : 0);
+        result = 31 * result + (invoiceNumberPrefix != null ? invoiceNumberPrefix.hashCode() : 0);
         result = 31 * result + (subscriptionId != null ? subscriptionId.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);

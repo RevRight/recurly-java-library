@@ -17,34 +17,7 @@
 
 package com.ning.billing.recurly;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.ning.billing.recurly.model.Account;
-import com.ning.billing.recurly.model.Accounts;
-import com.ning.billing.recurly.model.AddOn;
-import com.ning.billing.recurly.model.AddOns;
-import com.ning.billing.recurly.model.Adjustment;
-import com.ning.billing.recurly.model.Adjustments;
-import com.ning.billing.recurly.model.BillingInfo;
-import com.ning.billing.recurly.model.Coupon;
-import com.ning.billing.recurly.model.Coupons;
-import com.ning.billing.recurly.model.Invoice;
-import com.ning.billing.recurly.model.Invoices;
-import com.ning.billing.recurly.model.Plan;
-import com.ning.billing.recurly.model.Redemption;
-import com.ning.billing.recurly.model.Redemptions;
-import com.ning.billing.recurly.model.RefundOption;
-import com.ning.billing.recurly.model.Subscription;
-import com.ning.billing.recurly.model.SubscriptionAddOns;
-import com.ning.billing.recurly.model.SubscriptionUpdate;
-import com.ning.billing.recurly.model.SubscriptionNotes;
-import com.ning.billing.recurly.model.Subscriptions;
-import com.ning.billing.recurly.model.Transaction;
-import com.ning.billing.recurly.model.Transactions;
-
+import com.ning.billing.recurly.model.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -53,6 +26,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class TestRecurlyClient {
 
@@ -157,7 +135,7 @@ public class TestRecurlyClient {
             
             // Refetch the invoice using the getInvoice method
             final int invoiceID = subInvoice.getInvoiceNumber();
-            final Invoice gotInvoice = recurlyClient.getInvoice(invoiceID);
+            final Invoice gotInvoice = recurlyClient.getInvoice(Integer.toString(invoiceID));
 
             Assert.assertEquals(subInvoice.hashCode(), gotInvoice.hashCode());
             

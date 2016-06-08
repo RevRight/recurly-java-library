@@ -519,11 +519,11 @@ public class RecurlyClient {
      * <p>
      * Returns the invoice
      *
-     * @param invoiceId Recurly Invoice ID
+     * @param invoiceNumber Recurly Invoice number prefix + Invoice number
      * @return the invoice
      */
-    public Invoice getInvoice(final Integer invoiceId) {
-        return doGET(Invoices.INVOICES_RESOURCE + "/" + invoiceId, Invoice.class);
+    public Invoice getInvoice(final String invoiceNumber) {
+        return doGET(Invoices.INVOICES_RESOURCE + "/" + invoiceNumber, Invoice.class);
     }
 
     /**
