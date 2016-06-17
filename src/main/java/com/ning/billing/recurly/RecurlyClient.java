@@ -476,6 +476,14 @@ public class RecurlyClient {
                      Transactions.class);
     }
 
+
+    public Transactions getTransactions() {
+        return doGET(Transactions.TRANSACTIONS_RESOURCE,
+                Transactions.class);
+    }
+
+
+
     /**
      * Lookup a transaction
      *
