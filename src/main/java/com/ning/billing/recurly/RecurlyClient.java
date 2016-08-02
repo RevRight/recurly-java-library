@@ -942,27 +942,36 @@ public class RecurlyClient {
     }
 
     private <T> T callRecurlySafe(final AsyncHttpClient.BoundRequestBuilder builder, @Nullable final Class<T> clazz) {
-        try {
-            return callRecurly(builder, clazz);
-        } catch (IOException e) {
-            log.warn("Error while calling Recurly", e);
-            return null;
-        } catch (ExecutionException e) {
-            // Extract the errors exception, if any
-            if (e.getCause() != null &&
-                e.getCause().getCause() != null &&
-                e.getCause().getCause() instanceof TransactionErrorException) {
-                throw (TransactionErrorException) e.getCause().getCause();
-            } else if (e.getCause() != null &&
-                       e.getCause() instanceof TransactionErrorException) {
-                // See https://github.com/killbilling/recurly-java-library/issues/16
-                throw (TransactionErrorException) e.getCause();
+
+        int count = 0;
+        int maxTries = 10;
+        while(true) {
+            try {
+                return callRecurly(builder, clazz);
+            } catch (IOException e) {
+                log.warn("Error while calling Recurly", e);
+                return null;
+            } catch (ExecutionException e) {
+                // Extract the errors exception, if any
+                if (e.getCause() != null &&
+                        e.getCause().getCause() != null &&
+                        e.getCause().getCause() instanceof TransactionErrorException) {
+                    throw (TransactionErrorException) e.getCause().getCause();
+                } else if (e.getCause() != null &&
+                        e.getCause() instanceof TransactionErrorException) {
+                    // See https://github.com/killbilling/recurly-java-library/issues/16
+                    throw (TransactionErrorException) e.getCause();
+                }
+                log.error("Execution error", e);
+                if (++count == maxTries) {
+                    RecurlyAPIError recurlyError = new RecurlyAPIError();
+                    recurlyError.setStatusCode(1000); // TimeoutError
+                    throw new RecurlyAPIException(recurlyError);
+                }
+            } catch (InterruptedException e) {
+                log.error("Interrupted while calling Recurly", e);
+                return null;
             }
-            log.error("Execution error", e);
-            return null;
-        } catch (InterruptedException e) {
-            log.error("Interrupted while calling Recurly", e);
-            return null;
         }
     }
 
