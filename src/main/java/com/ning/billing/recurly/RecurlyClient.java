@@ -963,7 +963,15 @@ public class RecurlyClient {
                     throw (TransactionErrorException) e.getCause();
                 }
                 log.error("Execution error", e);
-                log.info(String.format("count: %d, maxTries: %d", count, maxTries));
+                try {
+                    Thread.sleep(30000); // 30seconds
+                } catch(InterruptedException ex) {
+                    log.info("Sleep interrupted exception");
+                    RecurlyAPIError recurlyError = new RecurlyAPIError();
+                    recurlyError.setStatusCode(1000); // TimeoutError
+                    throw new RecurlyAPIException(recurlyError);
+                }
+                //log.info(String.format("count: %d, maxTries: %d", count, maxTries));
                 if (++count == maxTries) {
                     log.info("Raising Timeout exception");
                     RecurlyAPIError recurlyError = new RecurlyAPIError();
