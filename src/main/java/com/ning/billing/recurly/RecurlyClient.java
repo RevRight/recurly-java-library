@@ -993,6 +993,7 @@ public class RecurlyClient {
                                          .addHeader("X-Api-Version", RECURLY_API_VERSION)
                                          .addHeader(HttpHeaders.USER_AGENT, userAgent)
                                          .setBodyEncoding("UTF-8")
+                                         .setRequestTimeout(60000*5)  //5min
                                          .execute()
                                          .get();
 
